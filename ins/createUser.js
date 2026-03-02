@@ -11,7 +11,7 @@ mongoose.connect(process.env.MONGO_URI)
   process.exit(1);
 });
 
-const dataPath = path.join(__dirname, "script.json");
+const dataPath = path.join(__dirname, "scriptUser.json");
 const rawData = fs.readFileSync(dataPath, "utf8");
 const usersData = JSON.parse(rawData);
 

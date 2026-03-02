@@ -15,12 +15,9 @@ const login = async (req, res) => {
     const validPassword = await user.matchPassword(password);
     if (!validPassword) return res.status(401).json({ message: "Mot de passe incorrect" });
 
-    const userRoles = await UserRole.find({ user: user._id }).populate("role");
-
     const payload = {
         id: user._id,
-        email: user.email,
-        roles: userRoles
+        email: user.email
     };
 
     const accessToken = generateToken(payload, '15m');
@@ -74,12 +71,10 @@ const refreshToken = async (req, res) => {
     const user = await User.findById(decoded.id);
     if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
 
-    const userRoles = await UserRole.find({ user: user._id }).populate("role");
 
     const payload = {
         id: user._id,
-        email: user.email,
-        roles: userRoles
+        email: user.email
     };
 
     const newAccessToken = generateToken(payload, '15m');
@@ -103,9 +98,7 @@ const refreshToken = async (req, res) => {
     res.json({
       message: "Nouveau token généré",
       user: {
-        id: user._id,
-        email: user.email,
-        nom: user.nom,
+        id: user._id
       }
     });
   } catch (error) {
