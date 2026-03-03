@@ -2,7 +2,8 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
-const User = require("./src/model/User");
+const User = require("../src/model/User");
+const bcrypt = require("bcrypt");
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB connecté"))
@@ -15,13 +16,16 @@ const dataPath = path.join(__dirname, "scriptUser.json");
 const rawData = fs.readFileSync(dataPath, "utf8");
 const usersData = JSON.parse(rawData);
 
+
 const createUsers = async () => {
+  for (let user of usersData) {
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
+  }
+
   try {
-    for (const u of usersData) {
-      const user = new User(u);
-      await user.save();
-      console.log("Utilisateur créé :", user.email);
-    }
+    await User.deleteMany({});
+    await User.insertMany(usersData, { ordered: false });
     process.exit(0);
   } catch (err) {
     console.error("Erreur :", err.message);

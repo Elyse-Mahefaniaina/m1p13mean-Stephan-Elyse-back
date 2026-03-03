@@ -14,7 +14,7 @@ mongoose.connect(process.env.MONGO_URI)
     process.exit(1);
   });
 
-const usersPath = ["azer@azer.com"];
+const usersPath = ["azer@azer.com", "mora.entana@me.com", "kojakoja.anay@kj.com"];
 
 const rolesData = [
   { code: "ADMIN" },
@@ -66,6 +66,7 @@ const init = async () => {
     // Créer les utilisateurs
     const userMap = {};
     for (const u of usersPath) {
+      console.log(u);
       let user = await User.findOne({ email: u.toUpperCase() });
       userMap[u.toUpperCase()] = user;
     }
@@ -74,24 +75,26 @@ const init = async () => {
     // Exemple : le premier utilisateur du JSON devient ADMIN
     const adminRole = rolesMap["ADMIN"];
     for (const u of usersPath) {
-        const ur = new UserRole({ user: userMap[u.toUpperCase()]._id, role: adminRole._id });
-        await ur.save();
-        console.log(`Utilisateur ${u.toUpperCase()} lié au rôle ADMIN`);
+        if(u == "azer@azer.com") {
+          const ur = new UserRole({ user: userMap[u.toUpperCase()]._id, role: adminRole._id });
+          await ur.save();
+          console.log(`Utilisateur ${u.toUpperCase()} lié au rôle ADMIN`);
+        }
     }
 
-    const shopRole = rolesMap["SHOP"];
-    console.log(shopRole._id);
-    
+    const shopRole = rolesMap["SHOP"];    
     for (const u of usersPath) {
+      if(u != "azer@azer.com") {
         const ur = new UserRole({ user: userMap[u.toUpperCase()]._id, role: shopRole._id });
         await ur.save();
         console.log(`Utilisateur ${u.toUpperCase()} lié au rôle SHOP`);
+      }
     }
 
     console.log("Initialisation terminée ✅");
     process.exit(0);
   } catch (err) {
-    console.error("Erreur :", err.message);
+    console.error("Erreur :", err);
     process.exit(1);
   }
 };

@@ -4,5 +4,17 @@
     "email": "azer@azer.com",
     "password": "azerty",
     "isVerified": true
+  },
+  {
+    "name": "Mora Entanana",
+    "email": "mora.entana@me.com",
+    "password": "azerty",
+    "isVerified": true
+  },
+  {
+    "name": "Kojakoj'ay",
+    "email": "kojakoja.anay@kj.com",
+    "password": "azerty",
+    "isVerified": true
   }
 ]
