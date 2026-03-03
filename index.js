@@ -16,7 +16,7 @@ const commandeRoute = require("./src/routes/commandeRoute");
 const commandeShopRoute = require("./src/routes/commandeShopRoute");
 
 const corsOptions = {
-  origin: "https://m1p13mean-stephan-elyse-front.vercel.app/",
+  origin: "https://m1p13mean-stephan-elyse-front.vercel.app",
   credentials: true,
 };  
 
