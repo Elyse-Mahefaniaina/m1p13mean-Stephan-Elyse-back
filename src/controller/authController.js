@@ -31,14 +31,14 @@ const login = async (req, res) => {
     res.cookie('accessToken', accessToken, {
         httpOnly: true,
         secure: true,
-        sameSite: 'Strict',
+        sameSite: 'None',
         maxAge: 15 * 60 * 1000 
     });
 
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: true,
-        sameSite: 'Strict',
+        sameSite: 'None',
         path: '/api/auth/refresh-token',
         maxAge: 7 * 24 * 60 * 60 * 1000
     });
@@ -91,14 +91,14 @@ const refreshToken = async (req, res) => {
     res.cookie('accessToken', newAccessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'Strict',
+      sameSite: 'None',
       maxAge: 15 * 60 * 1000
     });
 
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: true,
-        sameSite: 'Strict',
+        sameSite: 'None',
         path: '/api/auth/refresh-token',
         maxAge: 7 * 24 * 60 * 60 * 1000
     });
@@ -122,13 +122,13 @@ const logout = async (req, res) => {
     res.clearCookie('accessToken', {
       httpOnly: true,
       secure: true,
-      sameSite: 'Strict'
+      sameSite: 'None'
     });
 
     res.clearCookie('refreshToken', {
       httpOnly: true,
       secure: true,
-      sameSite: 'Strict',
+      sameSite: 'None',
       path: '/api/auth/refresh-token'
     });
 

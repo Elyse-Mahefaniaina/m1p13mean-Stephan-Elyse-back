@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 const Product = require("../src/model/Product");
 const ProductDetail = require("../src/model/ProductDetail");
 
-mongoose.connect(process.env.MONGO_URI)
+// mongoose.connect(process.env.MONGO_URI)
+mongoose.connect("mongodb+srv://elyse_db:28F5WGV5s41AWZmy@mean.n7rxhjt.mongodb.net/?appName=mean")
   .then(() => console.log("MongoDB connecté"))
   .catch(err => {
     console.error("Erreur connexion MongoDB :", err);
@@ -15,7 +16,7 @@ mongoose.connect(process.env.MONGO_URI)
 const productsData = [
   {
     "idtemp": 1,
-    "shop": "69a63fd4a901f656af2c1af4",
+    "shop": "69a6c9ce49b0dc2ba21dd362",
     "name": "MacBook Pro M3 Ultra",
     "category": "Électronique",
     "price": 2999000,
@@ -26,7 +27,7 @@ const productsData = [
   },
   {
     "idtemp": 2,
-    "shop": "69a63fd4a901f656af2c1af4",
+    "shop": "69a6c9ce49b0dc2ba21dd362",
     "name": "Sneakers Air Max Premium",
     "category": "Mode",
     "price": 189000,
@@ -36,7 +37,7 @@ const productsData = [
   },
   {
     "idtemp": 3,
-    "shop": "69a63fd4a901f656af2c1af4",
+    "shop": "69a6c9ce49b0dc2ba21dd362",
     "name": "Canapé Design Scandinave",
     "category": "Maison",
     "price": 899000,
@@ -46,7 +47,7 @@ const productsData = [
   },
   {
     "idtemp": 4,
-    "shop": "69a63fd4a901f656af2c1af4",
+    "shop": "69a6c9ce49b0dc2ba21dd362",
     "name": "Montre Connectée Elite",
     "category": "Électronique",
     "price": 459000,
@@ -57,7 +58,7 @@ const productsData = [
   },
   {
     "idtemp": 5,
-    "shop": "69a63fd4a901f656af2c1af4",
+    "shop": "69a6c9ce49b0dc2ba21dd362",
     "name": "Casque Audio Studio Pro",
     "category": "Électronique",
     "price": 349000,
@@ -67,7 +68,7 @@ const productsData = [
   },
   {
     "idtemp": 6,
-    "shop": "69a63fd4a901f656af2c1af4",
+    "shop": "69a6c9ce49b0dc2ba21dd362",
     "name": "Sac à Main Cuir Milano",
     "category": "Mode",
     "price": 275000,
@@ -78,7 +79,7 @@ const productsData = [
   },
   {
     "idtemp": 7,
-    "shop": "69a65e2556264d99e5148db0",
+    "shop": "69a6ca5e49b0dc2ba21dd366",
     "name": "Lampe Design Articulée",
     "category": "Maison",
     "price": 145000,
@@ -88,7 +89,7 @@ const productsData = [
   },
   {
     "idtemp": 8,
-    "shop": "69a65e2556264d99e5148db0",
+    "shop": "69a6ca5e49b0dc2ba21dd366",
     "name": "Ballon de Football Pro",
     "category": "Sport",
     "price": 55000,
@@ -98,7 +99,7 @@ const productsData = [
   },
   {
     "idtemp": 9,
-    "shop": "69a65e2556264d99e5148db0",
+    "shop": "69a6ca5e49b0dc2ba21dd366",
     "name": "Sérum Visage Premium",
     "category": "Beauté",
     "price": 89000,
@@ -109,7 +110,7 @@ const productsData = [
   },
   {
     "idtemp": 10,
-    "shop": "69a65e2556264d99e5148db0",
+    "shop": "69a6ca5e49b0dc2ba21dd366",
     "name": "Clavier Mécanique RGB",
     "category": "Électronique",
     "price": 199000,
@@ -119,7 +120,7 @@ const productsData = [
   },
   {
     "idtemp": 11,
-    "shop": "69a65e2556264d99e5148db0",
+    "shop": "69a6ca5e49b0dc2ba21dd366",
     "name": "Tapis de Yoga Premium",
     "category": "Sport",
     "price": 65000,
@@ -129,7 +130,7 @@ const productsData = [
   },
   {
     "idtemp": 12,
-    "shop": "69a65e2556264d99e5148db0",
+    "shop": "69a6ca5e49b0dc2ba21dd366",
     "name": "Parfum Élégance Noire",
     "category": "Beauté",
     "price": 135000,
