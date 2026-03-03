@@ -17,14 +17,23 @@ mongoose.connect(process.env.MONGO_URI)
 const usersPath = ["azer@azer.com"];
 
 const rolesData = [
-  { code: "ADMIN" }
+  { code: "ADMIN" },
+  { code: "SHOP" },
 ];
 
 // 3️⃣ Définition des permissions
 const permissionsData = [
+  // admin
   { roleCode: "ADMIN", url: "/admin/dashboard" },
   { roleCode: "ADMIN", url: "/admin/boxes" },
-  { roleCode: "ADMIN", url: "/admin/shops" }
+  { roleCode: "ADMIN", url: "/admin/shops" },
+
+  // shop
+  { roleCode: "SHOP", url: "/shop/dashboard" },
+  { roleCode: "SHOP", url: "/shop/product-creation" },
+  { roleCode: "SHOP", url: "/shop/orders" },
+  { roleCode: "SHOP", url: "/shop/promotions" },
+  { roleCode: "SHOP", url: "/shop/profile" },
 ];
 
 const init = async () => {
@@ -33,18 +42,13 @@ const init = async () => {
     await Role.deleteMany({});
     await RolePermission.deleteMany({});
     await UserRole.deleteMany({});
+    
+    const insertedRoles = await Role.insertMany(rolesData, { ordered: false });
     const rolesMap = {};
-    for (const r of rolesData) {
-      let role = await Role.findOne({ code: r.code });
-      if (!role) {
-        role = new Role(r);
-        await role.save();
-        console.log("Rôle créé :", r.code);
-      } else {
-        console.log("Rôle existant :", r.code);
-      }
-      rolesMap[r.code] = role;
-    }
+    insertedRoles.forEach(r => {
+      console.log("Rôle créé :", r.code);
+      rolesMap[r.code] = r;
+    });
 
     // Créer les permissions
     for (const p of permissionsData) {
@@ -73,6 +77,15 @@ const init = async () => {
         const ur = new UserRole({ user: userMap[u.toUpperCase()]._id, role: adminRole._id });
         await ur.save();
         console.log(`Utilisateur ${u.toUpperCase()} lié au rôle ADMIN`);
+    }
+
+    const shopRole = rolesMap["SHOP"];
+    console.log(shopRole._id);
+    
+    for (const u of usersPath) {
+        const ur = new UserRole({ user: userMap[u.toUpperCase()]._id, role: shopRole._id });
+        await ur.save();
+        console.log(`Utilisateur ${u.toUpperCase()} lié au rôle SHOP`);
     }
 
     console.log("Initialisation terminée ✅");

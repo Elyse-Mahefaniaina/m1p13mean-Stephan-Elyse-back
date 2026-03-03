@@ -75,7 +75,7 @@ const productsData = [
     "name": "Lampe Design Articulée",
     "category": "Maison",
     "price": 145000,
-    "image": "https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?auto=format&fit=crop&q=80&w=600",
+    "image": "https://www.lheritierdutemps.com/71253/lampe-de-table-articulee-jona-noir-woody-luminaire-design-en-acier-.jpg",
     "rating": 3,
     "reviews": 29
   },
