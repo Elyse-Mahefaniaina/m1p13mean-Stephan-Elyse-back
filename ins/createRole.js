@@ -22,7 +22,9 @@ const rolesData = [
 
 // 3️⃣ Définition des permissions
 const permissionsData = [
-  { roleCode: "ADMIN", url: "/admin/dashboard" }
+  { roleCode: "ADMIN", url: "/admin/dashboard" },
+  { roleCode: "ADMIN", url: "/admin/boxes" },
+  { roleCode: "ADMIN", url: "/admin/shops" }
 ];
 
 const init = async () => {

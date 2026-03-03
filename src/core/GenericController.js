@@ -135,10 +135,13 @@ function createGenericController(Model, relations = {}, excludeFields = []) {
     async remove(req, res) {
       try {
         const { id } = req.params;
-        const item = await Model.findById(id);
-        if (!item) return res.status(404).json({ error: "Not found" });
 
-        await item.remove();
+        const deletedItem = await Model.findByIdAndDelete(id);
+
+        if (!deletedItem) {
+          return res.status(404).json({ error: "Not found" });
+        }
+
         return res.json({ message: "Deleted successfully" });
 
       } catch (err) {
