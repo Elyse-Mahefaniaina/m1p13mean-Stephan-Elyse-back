@@ -15,7 +15,7 @@ const productRoute = require("./src/routes/productRoute");
 const userRoute = require("./src/routes/userRoute");
 
 const corsOptions = {
-   origin: "http://localhost:4200",
+   origin: process.env.FRONT_URL,
   credentials: true,
 };  
 
