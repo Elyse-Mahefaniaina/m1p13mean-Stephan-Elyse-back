@@ -25,7 +25,6 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json({ extended: true }));
 
-// controller
 app.use('/auth', authRoute);
 app.use('/can-active', authenticateToken, canActiveRoute);
 app.use('/boxes', authenticateToken, boxRoute);
