@@ -1,9 +1,11 @@
 const User = require('../model/User');
 const Shop = require('../model/Shop');
 const { generateToken, validateToken } = require('../config/jwtUtils');
+const connectDB = require("./src/config/db");
 
 const login = async (req, res) => {
   try {
+    await connectDB();
     const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({ message: "email et mot de passe requis" });
@@ -58,6 +60,7 @@ const login = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   try {
+    await connectDB();
     const token = req.cookies.refreshToken;
 
     if (!token) {
