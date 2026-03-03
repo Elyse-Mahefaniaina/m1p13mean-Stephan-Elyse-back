@@ -1,6 +1,5 @@
 require("dotenv").config();
 const express = require("express");
-const connectDB = require("./src/config/db");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const path = require('path');
@@ -20,8 +19,6 @@ const corsOptions = {
 };  
 
 const app = express();
-
-connectDB();
 
 app.use('/assets',express.static(path.join(__dirname, 'assets')));
 app.use(cors(corsOptions));
