@@ -11,6 +11,7 @@ const authRoute = require('./src/routes/authRoute');
 const canActiveRoute = require('./src/routes/canActiveRoute');
 const boxRoute = require("./src/routes/boxRoute");
 const shopRoute = require("./src/routes/shopRoute");
+const productRoute = require("./src/routes/productRoute");
 
 const corsOptions = {
    origin: "http://localhost:4200",
@@ -34,6 +35,7 @@ app.use('/auth', authRoute);
 app.use('/can-active', authenticateToken, canActiveRoute);
 app.use('/boxes', authenticateToken, boxRoute);
 app.use('/shops', authenticateToken, shopRoute);
+app.use('/products', productRoute);
 
 app.listen(process.env.PORT, () =>
   console.log(`Serveur lancé sur le port ${process.env.PORT}`)
