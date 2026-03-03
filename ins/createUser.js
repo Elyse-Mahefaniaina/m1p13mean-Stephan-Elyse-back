@@ -5,7 +5,8 @@ const path = require("path");
 const User = require("../src/model/User");
 const bcrypt = require("bcrypt");
 
-mongoose.connect(process.env.MONGO_URI)
+// mongoose.connect(process.env.MONGO_URI)
+mongoose.connect("mongodb+srv://elyse_db:28F5WGV5s41AWZmy@mean.n7rxhjt.mongodb.net/?appName=mean")
 .then(() => console.log("MongoDB connecté"))
 .catch(err => {
   console.error("Erreur connexion MongoDB :", err);
@@ -26,6 +27,8 @@ const createUsers = async () => {
   try {
     await User.deleteMany({});
     await User.insertMany(usersData, { ordered: false });
+    console.log("user createds");
+    
     process.exit(0);
   } catch (err) {
     console.error("Erreur :", err.message);

@@ -7,7 +7,8 @@ const RolePermission = require("../src/model/RolePermission");
 const UserRole = require("../src/model/UserRole");
 
 // Connect MongoDB
-mongoose.connect(process.env.MONGO_URI)
+// mongoose.connect(process.env.MONGO_URI)
+mongoose.connect("mongodb+srv://elyse_db:28F5WGV5s41AWZmy@mean.n7rxhjt.mongodb.net/?appName=mean")
   .then(() => console.log("MongoDB connecté"))
   .catch(err => {
     console.error("Erreur connexion MongoDB :", err);
