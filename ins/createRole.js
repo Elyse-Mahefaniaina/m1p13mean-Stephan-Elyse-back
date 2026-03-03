@@ -14,17 +14,26 @@ mongoose.connect(process.env.MONGO_URI)
     process.exit(1);
   });
 
-const usersPath = ["azer@azer.com"];
+const usersPath = ["azer@azer.com", "mora.entana@me.com", "kojakoja.anay@kj.com"];
 
 const rolesData = [
-  { code: "ADMIN" }
+  { code: "ADMIN" },
+  { code: "SHOP" },
 ];
 
 // 3️⃣ Définition des permissions
 const permissionsData = [
+  // admin
   { roleCode: "ADMIN", url: "/admin/dashboard" },
   { roleCode: "ADMIN", url: "/admin/boxes" },
-  { roleCode: "ADMIN", url: "/admin/shops" }
+  { roleCode: "ADMIN", url: "/admin/shops" },
+
+  // shop
+  { roleCode: "SHOP", url: "/shop/dashboard" },
+  { roleCode: "SHOP", url: "/shop/product-creation" },
+  { roleCode: "SHOP", url: "/shop/orders" },
+  { roleCode: "SHOP", url: "/shop/promotions" },
+  { roleCode: "SHOP", url: "/shop/profile" },
 ];
 
 const init = async () => {
@@ -33,18 +42,13 @@ const init = async () => {
     await Role.deleteMany({});
     await RolePermission.deleteMany({});
     await UserRole.deleteMany({});
+    
+    const insertedRoles = await Role.insertMany(rolesData, { ordered: false });
     const rolesMap = {};
-    for (const r of rolesData) {
-      let role = await Role.findOne({ code: r.code });
-      if (!role) {
-        role = new Role(r);
-        await role.save();
-        console.log("Rôle créé :", r.code);
-      } else {
-        console.log("Rôle existant :", r.code);
-      }
-      rolesMap[r.code] = role;
-    }
+    insertedRoles.forEach(r => {
+      console.log("Rôle créé :", r.code);
+      rolesMap[r.code] = r;
+    });
 
     // Créer les permissions
     for (const p of permissionsData) {
@@ -62,6 +66,7 @@ const init = async () => {
     // Créer les utilisateurs
     const userMap = {};
     for (const u of usersPath) {
+      console.log(u);
       let user = await User.findOne({ email: u.toUpperCase() });
       userMap[u.toUpperCase()] = user;
     }
@@ -70,15 +75,26 @@ const init = async () => {
     // Exemple : le premier utilisateur du JSON devient ADMIN
     const adminRole = rolesMap["ADMIN"];
     for (const u of usersPath) {
-        const ur = new UserRole({ user: userMap[u.toUpperCase()]._id, role: adminRole._id });
+        if(u == "azer@azer.com") {
+          const ur = new UserRole({ user: userMap[u.toUpperCase()]._id, role: adminRole._id });
+          await ur.save();
+          console.log(`Utilisateur ${u.toUpperCase()} lié au rôle ADMIN`);
+        }
+    }
+
+    const shopRole = rolesMap["SHOP"];    
+    for (const u of usersPath) {
+      if(u != "azer@azer.com") {
+        const ur = new UserRole({ user: userMap[u.toUpperCase()]._id, role: shopRole._id });
         await ur.save();
-        console.log(`Utilisateur ${u.toUpperCase()} lié au rôle ADMIN`);
+        console.log(`Utilisateur ${u.toUpperCase()} lié au rôle SHOP`);
+      }
     }
 
     console.log("Initialisation terminée ✅");
     process.exit(0);
   } catch (err) {
-    console.error("Erreur :", err.message);
+    console.error("Erreur :", err);
     process.exit(1);
   }
 };

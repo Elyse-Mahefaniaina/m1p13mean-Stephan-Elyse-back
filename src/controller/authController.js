@@ -1,5 +1,5 @@
 const User = require('../model/User');
-const UserRole = require('../model/UserRole');
+const Shop = require('../model/Shop');
 const { generateToken, validateToken } = require('../config/jwtUtils');
 
 const login = async (req, res) => {
@@ -15,9 +15,12 @@ const login = async (req, res) => {
     const validPassword = await user.matchPassword(password);
     if (!validPassword) return res.status(401).json({ message: "Mot de passe incorrect" });
 
+    const shop = await Shop.findOne({email: email.toLowerCase()})
+
     const payload = {
         id: user._id,
-        email: user.email
+        email: user.email,
+        shop: shop
     };
 
     const accessToken = generateToken(payload, '15m');
@@ -44,7 +47,7 @@ const login = async (req, res) => {
             id: user._id,
             email: user.email,
             nom: user.nom,
-            isTempPassword: user.isPasswordTemp || false
+            shop: shop
         }
     });
 
@@ -71,10 +74,12 @@ const refreshToken = async (req, res) => {
     const user = await User.findById(decoded.id);
     if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
 
-
+    const shop = await Shop.findOne({email: email.toLowerCase()});
+    
     const payload = {
         id: user._id,
-        email: user.email
+        email: user.email,
+        shop: shop
     };
 
     const newAccessToken = generateToken(payload, '15m');
@@ -97,8 +102,11 @@ const refreshToken = async (req, res) => {
 
     res.json({
       message: "Nouveau token généré",
-      user: {
-        id: user._id
+      user: { 
+        id: user._id,
+        email: user.email,
+        nom: user.nom,
+        shop: shop
       }
     });
   } catch (error) {
