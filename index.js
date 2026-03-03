@@ -24,11 +24,8 @@ const app = express();
 connectDB();
 
 app.use('/assets',express.static(path.join(__dirname, 'assets')));
-
 app.use(cors(corsOptions));
-
 app.use(cookieParser());
-
 app.use(express.json({ extended: true }));
 
 // controller
@@ -39,6 +36,4 @@ app.use('/shops', authenticateToken, shopRoute);
 app.use('/products', productRoute);
 app.use('/users', authenticateToken, userRoute);
 
-app.listen(process.env.PORT, () =>
-  console.log(`Serveur lancé sur le port ${process.env.PORT}`)
-);
+module.exports = app;
