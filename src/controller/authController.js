@@ -1,7 +1,7 @@
 const User = require('../model/User');
 const Shop = require('../model/Shop');
 const { generateToken, validateToken } = require('../config/jwtUtils');
-const connectDB = require("./src/config/db");
+const connectDB = require("../config/db");
 
 const login = async (req, res) => {
   try {

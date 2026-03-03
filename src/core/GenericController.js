@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const connectDB = require("./src/config/db");
+const connectDB = require("../config/db");
 
 function createGenericController(Model, relations = {}, excludeFields = []) {
 

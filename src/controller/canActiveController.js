@@ -1,8 +1,10 @@
 const UserRole = require("../model/UserRole");
 const RolePermission = require("../model/RolePermission");
+const connectDB = require("../config/db");
 
 const canActive = async (req, res) => {
   try {
+    await connectDB();
     const user = req.user;
     const path = req.body.path;
 
