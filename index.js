@@ -12,6 +12,8 @@ const boxRoute = require("./src/routes/boxRoute");
 const shopRoute = require("./src/routes/shopRoute");
 const productRoute = require("./src/routes/productRoute");
 const userRoute = require("./src/routes/userRoute");
+const commandeRoute = require("./src/routes/commandeRoute");
+const commandeShopRoute = require("./src/routes/commandeShopRoute");
 
 const corsOptions = {
    origin: process.env.FRONT_URL,
@@ -30,6 +32,8 @@ app.use('/can-active', authenticateToken, canActiveRoute);
 app.use('/boxes', authenticateToken, boxRoute);
 app.use('/shops', authenticateToken, shopRoute);
 app.use('/products', productRoute);
+app.use('/commandes', commandeRoute);
+app.use('/commande-shops', authenticateToken, commandeShopRoute);
 app.use('/users', authenticateToken, userRoute);
 
 module.exports = app;

@@ -31,6 +31,47 @@ function createGenericController(Model, relations = {}, excludeFields = []) {
     return where;
   }
 
+  function applyExpand(query, expand) {
+    if (!expand) return query;
+    const includes = expand.split(",").filter(k => relations[k]);
+    includes.forEach(r => query = query.populate(r));
+    return query;
+  }
+
+  function applyPaginationAndSort(query, req) {
+    const { $top, $skip, $order } = req.query;
+    if ($skip) query = query.skip(parseInt($skip, 10));
+    if ($top) query = query.limit(parseInt($top, 10));
+
+    if ($order) {
+      const sort = {};
+      $order.split(",").forEach(o => {
+        const [field, dir] = o.trim().split(/\s+/);
+        sort[field] = dir && dir.toUpperCase() === "DESC" ? -1 : 1;
+      });
+      query = query.sort(sort);
+    }
+    return query;
+  }
+
+  function applyExclude(query) {
+    if (excludeFields.length > 0) {
+      const select = excludeFields.map(f => `-${f}`).join(" ");
+      query = query.select(select);
+    }
+    return query;
+  }
+
+  function validateObjectIdField(field, value) {
+    const schemaPath = Model.schema.path(field);
+    if (schemaPath && schemaPath.instance === "ObjectID") {
+      if (!mongoose.Types.ObjectId.isValid(value)) {
+        return `Invalid ${field}`;
+      }
+    }
+    return null;
+  }
+
   return {
 
     async findAll(req, res) {
@@ -41,27 +82,9 @@ function createGenericController(Model, relations = {}, excludeFields = []) {
 
         let query = Model.find(filter);
 
-        if ($expand) {
-          const includes = $expand.split(",").filter(k => relations[k]);
-          includes.forEach(r => query = query.populate(r));
-        }
-
-        if ($skip) query = query.skip(parseInt($skip, 10));
-        if ($top) query = query.limit(parseInt($top, 10));
-
-        if ($order) {
-          const sort = {};
-          $order.split(",").forEach(o => {
-            const [field, dir] = o.trim().split(/\s+/);
-            sort[field] = dir && dir.toUpperCase() === "DESC" ? -1 : 1;
-          });
-          query = query.sort(sort);
-        }
-
-        if (excludeFields.length > 0) {
-          const select = excludeFields.map(f => `-${f}`).join(" ");
-          query = query.select(select);
-        }
+        query = applyExpand(query, $expand);
+        query = applyPaginationAndSort(query, req);
+        query = applyExclude(query);
 
         const data = await query.exec();
         return res.json({ count: data.length, data });
@@ -78,15 +101,11 @@ function createGenericController(Model, relations = {}, excludeFields = []) {
         let query = Model.findById(id);
 
         if (req.query.$expand) {
-          const includes = req.query.$expand.split(",").filter(k => relations[k]);
-          includes.forEach(r => query = query.populate(r));
+          query = applyExpand(query, req.query.$expand);
         }
 
         // Exclude fields
-        if (excludeFields.length > 0) {
-          const select = excludeFields.map(f => `-${f}`).join(" ");
-          query = query.select(select);
-        }
+        query = applyExclude(query);
 
         const item = await query.exec();
         if (!item) return res.status(404).json({ error: "Not found" });
@@ -96,6 +115,36 @@ function createGenericController(Model, relations = {}, excludeFields = []) {
       } catch (err) {
         return res.status(500).json({ error: err.message });
       }
+    },
+
+    findByField(field, paramName = field) {
+      return async (req, res) => {
+        try {
+          const value = req.params[paramName];
+          if (!value) {
+            return res.status(400).json({ error: `Missing ${paramName}` });
+          }
+
+          const invalid = validateObjectIdField(field, value);
+          if (invalid) {
+            return res.status(400).json({ error: invalid });
+          }
+
+          const { $filter, $expand } = req.query;
+          const extraFilter = parseFilter($filter);
+          const filter = { ...extraFilter, [field]: value };
+
+          let query = Model.find(filter);
+          query = applyExpand(query, $expand);
+          query = applyPaginationAndSort(query, req);
+          query = applyExclude(query);
+
+          const data = await query.exec();
+          return res.json({ count: data.length, data });
+        } catch (err) {
+          return res.status(500).json({ error: err.message });
+        }
+      };
     },
 
     async create(req, res) {
