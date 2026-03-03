@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const connectDB = require("../config/db");
 
 function createGenericController(Model, relations = {}, excludeFields = []) {
 
@@ -75,7 +76,8 @@ function createGenericController(Model, relations = {}, excludeFields = []) {
 
     async findAll(req, res) {
       try {
-        const { $filter, $expand } = req.query;
+        await connectDB();
+        const { $filter, $top, $skip, $expand, $order } = req.query;
         const filter = parseFilter($filter);
 
         let query = Model.find(filter);
@@ -94,6 +96,7 @@ function createGenericController(Model, relations = {}, excludeFields = []) {
 
     async findOne(req, res) {
       try {
+        await connectDB();
         const { id } = req.params;
         let query = Model.findById(id);
 
@@ -146,6 +149,7 @@ function createGenericController(Model, relations = {}, excludeFields = []) {
 
     async create(req, res) {
       try {
+        await connectDB();
         const body = { ...req.body };
 
         // Convert string dates en Date
@@ -166,6 +170,7 @@ function createGenericController(Model, relations = {}, excludeFields = []) {
 
     async update(req, res) {
       try {
+        await connectDB();
         const { id } = req.params;
         const item = await Model.findById(id);
         if (!item) return res.status(404).json({ error: "Not found" });
@@ -183,6 +188,7 @@ function createGenericController(Model, relations = {}, excludeFields = []) {
 
     async remove(req, res) {
       try {
+        await connectDB();
         const { id } = req.params;
 
         const deletedItem = await Model.findByIdAndDelete(id);
